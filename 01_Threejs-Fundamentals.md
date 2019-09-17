@@ -3,10 +3,28 @@
 This is the first article in a series of articles about three.js. [Three.js](http://threejs.org/) is a 3D library that tries to make it as easy as possible to get 3D content on a webpage.
 
 Three.js is often confused with WebGL since more often than not, but not always, three.js uses WebGL to draw 3D. [WebGL is a very low-level system that only draws points, lines, and triangles](https://webglfundamentals.org/). To do anything useful with WebGL generally requires quite a bit of code and that is where three.js comes in. It handles stuff like scenes, lights, shadows, materials, textures, 3d math, all things that you'd have to write yourself if you were to use WebGL directly.
+<details>
+    <summary><b>
+        What is the difference between WebGL and Three.js?
+    </b></summary>
+        Three.js is often confused with WebGL, but essentially, three.js uses WebGL to draw 3D. WebGL is a very low-level system that only draws points, lines, and triangles. The benefit of using Three.js is that it handles things like lights, shadows, materials, textures, 3d math out of the box and is more akin to a 3D library than WebGL which is more of a rasterization engine.
+</details>
 
 These tutorials assume you already know JavaScript and, for the most part they will use ES6 style. [See here for a terse list of things you're expected to already know](https://threejsfundamentals.org/threejs/lessons/threejs-prerequisites.html). Most browsers that support three.js are auto-updated so most users should be able to run this code. If you'd like to make this code run on really old browsers look into a transpiler like *Babel*. Of course users running really old browsers probably have machines that can't run three.js.
 
-When learning most programming languages the first thing people do is make the computer print "Hello World!". For 3D one of the most common first things to do is to make a 3D cube. So let's start with "Hello Cube!"
+When learning most programming languages the first thing people do is make the computer print `"Hello World!"`. For 3D one of the most common first things to do is to make a 3D cube. So let's start with "Hello Cube!"
+<details>
+    <summary><b>
+        What is the first thing we need need to establish in our html/threejs project?<br>
+        (B) How do we get our html element talking with Three.js?
+    </b></summary>
+        A canvas using the <code>< canvas ></code> tag.<br>
+        Three.js will draw into that canvas so we need to look it up and pass it to three.js using a query selector...
+        <code>
+        const canvas = document.querySelector('#c'); <br>
+        const renderer = new THREE.WebGLRenderer({canvas});
+        </code>
+</details>
 
 The first thing we need is a `<canvas>` tag so
 ```html 
@@ -28,7 +46,7 @@ Three.js will draw into that canvas so we need to look it up and pass it to thre
     </script>
 ```
 
-Note there are some esoteric details here. If you don't pass a canvas into three.js it will create one for you but then you have to add it to your document. Where to add it may change depending on your use case and you'll have to change your code so I find that passing a canvas to three.js feels a little more flexible. I can put the canvas anywhere and the code will find it where as if I had code to insert the canvas into to the document I'd likely have to change that code if my use case changed.
+Note there are some esoteric details here. *If you don't pass a canvas into three.js it will create one for you but then you have to add it to your document*. Where to add it may change depending on your use case and you'll have to change your code so I find that passing a canvas to three.js feels a little more flexible. I can put the canvas anywhere and the code will find it where as if I had code to insert the canvas into to the document I'd likely have to change that code if my use case changed.
 
 After we look up the canvas we create a `WebGLRenderer`. The renderer is the thing responsible for actually taking all the data you provide and rendering it to the canvas. In the past there have been other renderers like `CSSRenderer`, a `CanvasRenderer` and in the future there may be a `WebGL2Renderer` or `WebGPURenderer`. For now there's the `WebGLRenderer` that uses WebGL to render 3D to the canvas.
 
@@ -40,30 +58,45 @@ Next up we need a camera.
     const far = 5;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 ```
+<details>
+    <summary><b>
+        After we set up our canvas, 
+    </b></summary>
+        Three.js is often confused with WebGL, but essentially, three.js uses WebGL to draw 3D. WebGL is a very low-level system that only draws points, lines, and triangles. The benefit of using Three.js is that it handles things like lights, shadows, materials, textures, 3d math out of the box and is more akin to a 3D library than WebGL which is more of a rasterization engine.
+</details>
 
 `fov` *is short for field of view*. *In this case 75 degrees in the vertical dimension*. **Note that most angles in three.js are in radians but for some reason the perspective camera takes degrees**.
 
-aspect is the display aspect of the canvas. We'll go over the details in another article but by default a canvas is 300x150 pixels which makes the aspect 300/150 or 2.
+`aspect` *is the display aspect of the canvas*. We'll go over the details in another article but by default a canvas is 300x150 pixels which makes the aspect 300/150 or 2.
 
-near and far represent the space in front of the camera that will be rendered. Anything before that range or after that range will be clipped (not drawn).
+*near* and *far* represent the space in front of the camera that will be rendered. Anything before that range or after that range will be clipped (not drawn).
 
-Those 4 settings define a "frustum". A frustum is the name of a 3d shape that is like a pyramid with the tip sliced off. In other words think of the word "frustum" as another 3D shape like sphere, cube, prism, frustum.
+Those 4 settings define a "**frustum**". A **frustum** is the name of a 3d shape that is like a pyramid with the tip sliced off. In other words think of the word "frustum" as another 3D shape like sphere, cube, prism, frustum.
 
+<div>
+    <img style="width: 400px" src="https://threejsfundamentals.org/threejs/lessons/resources/frustum-3d.svg"/>
+</div>
+ 
 The height of the near and far planes are determined by the field of view. The width of both planes is determined by the field of view and the aspect.
 
 Anything inside the defined frustum will be be drawn. Anything outside will not.
 
 The camera defaults to looking down the -Z axis with +Y up. We'll put our cube at the origin so we need to move the camera back a litte from the origin in order to see anything.
-
+```js
     camera.position.z = 2;
+```
 
 Here's what we're aiming for.
-
-In the diagram above we can see our camera is at z = 2. It's looking down the -Z axis. Our frustum starts 0.1 units from the front of the camera and goes to 5 units in front of the camera. Because in this diagram we are looking down, the field of view is affected by the aspect. Our canvas is twice as wide as it is tall so across view the field of view will be much wider than our specified 75 degrees which is the vertical field of view.
+<div>
+    <img style="width: 500px" src="https://threejsfundamentals.org/threejs/lessons/resources/scene-down.svg"/>
+</div>
+ 
+In the diagram above we can see our camera is at `z = 2`. It's looking down the -Z axis. Our frustum starts 0.1 units from the front of the camera and goes to 5 units in front of the camera. Because in this diagram we are looking down, the field of view is affected by the aspect. Our canvas is twice as wide as it is tall so across view the field of view will be much wider than our specified 75 degrees which is the vertical field of view.
 
 Next we make a Scene. A Scene in three.js is the root of a form of scene graph. Anything you want three.js to draw needs to be added to the scene. We'll cover more details of how scenes work in a future article.
-
+```js
     const scene = new THREE.Scene();
+```
 
 Next up we create a BoxGeometry which contains the data for a box. Almost anything we want to display in Three.js needs geometry which defines the vertices that make up our 3D object.
 
@@ -97,7 +130,7 @@ It's kind of hard to tell that is a 3D cube since we're viewing it directly down
 Let's animate it spinning and hopefully that will make it clear it's being drawn in 3D. To animate it we'll render inside a render loop using requestAnimationFrame.
 
 Here's our loop
-
+```js
     function render(time) {
       time *= 0.001;  // convert time to seconds
      
@@ -109,7 +142,7 @@ Here's our loop
       requestAnimationFrame(render);
     }
     requestAnimationFrame(render);
-
+```
 requestAnimationFrame is a request to the browser that you want to animate something. You pass it a function to be called. In our case that function is render. The browser will call your function and if you update anything related to the display of the page the browser will re-render the page. In our case we are calling three's renderer.render function which will draw our scene.
 
 requestAnimationFrame passes the time since the page loaded to our function. That time is passed in milliseconds. I find it's much easier to work with seconds so here we're converting that to seconds.

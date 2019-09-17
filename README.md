@@ -1,4 +1,4 @@
-# [WebGL Fundamentals](https://threejsfundamentals.org/)
+# [Three.js Fundamentals](https://threejsfundamentals.org/)
 ![](http://learningthreejs.com/data/2015-08-17-learning-three-dot-js-news-number-12-creative-demos-of-the-week/screenshots/blck4777.jpg)
 
 ## Course Description
@@ -23,12 +23,12 @@ Notes are organzied by sections presented below in the Table of Contents.
 ## Table of Contents
 A set of articles to help learn Three.js.
 
-- Basics
-    - Fundamentals
+- **Basics**
+    - [Fundamentals](https://github.com/kelasol/threejs-fundamentals/blob/master/01_Threejs-Fundamentals.md)
     - Responsive Design
     - Prerequisites
     - Setup
-- Solutions
+- **Solutions**
     - Load an .OBJ file
     - Load a .GLTF file
     - Add a Background or Skybox
@@ -45,15 +45,15 @@ A set of articles to help learn Three.js.
     - Freeing Resources
     - Making Voxel Geometry (Minecraft)
     - Start making a Game.
-- WebVR
+- **WebVR**
     - WebVR - Basics
     - WebVR - Look To Select
     - WebVR - Point To Select
-- Optimization
+- **Optimization**
     - Optimizing Lots of Objects
     - Optimizing Lots of Objects Animated
     - Using OffscreenCanvas in a Web Worker
-- Tips
+- **Tips**
     - Rendering On Demand
     - Debugging JavaScript
     - Debugging GLSL
@@ -62,7 +62,7 @@ A set of articles to help learn Three.js.
     - Get Keyboard Input From a Canvas
     - Make the Canvas Transparent
     - Use three.js as Background in HTML
-- Fundamentals
+- **Fundamentals**
     - Primitives
     - Scenegraph
     - Materials
@@ -74,5 +74,5 @@ A set of articles to help learn Three.js.
     - Render Targets
     - Custom Geometry
     - Custom BufferGeometry
-- Reference
+- **Reference**
     - Material Table
